@@ -1,20 +1,23 @@
 ﻿#include "mainwindow.h"
+
 #include <QApplication>
 #include <QPluginLoader>
 #include<QDateTime>
 #include<QFileInfo>
 #include<QDebug>
+
+#include"parameter.h"
+
 #include"datafeed/datafeed.h"
 #include"fillpolicy/fillpolicy.h"
-#include"parameter.h"
 #include"match_engine/match_engine.h"
 #include"snapshot/snapshot.h"
 #include"tactic/tactic.h"
 
-#include"../gpp_qt/wtimer/wtimer.h"
 #include"../gpp_qt/cmd_line/cmd_line.h"
 #include"../gpp_qt/log_info/logs.h"
 #include"../gpp_qt/wfunction/qtfunction.h"
+#include"../gpp_qt/wtimer/wtimer.h"
 
 
 int main(int argc, char *argv[])
@@ -71,6 +74,7 @@ int main(int argc, char *argv[])
 
         df->setfile(cl->get_para("quote_file"));
         df->run();
+        qDebug()<< QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss ddd");
         return a.exec();
     }
     else
@@ -81,6 +85,7 @@ int main(int argc, char *argv[])
 
         df->setfile(cl->get_para("quote_file"));
         df->run();
+        qDebug()<< QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss ddd");
         return 0;
     }
 }
