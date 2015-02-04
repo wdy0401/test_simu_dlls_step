@@ -23,6 +23,7 @@
 int main(int argc, char *argv[])
 {
     qDebug()<< QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss ddd");
+    QApplication a(argc, argv);
     cmd_line * cl=new cmd_line(argc,argv);
     logs * ls = new logs;
     wtimer * timer=new wtimer;
@@ -60,7 +61,6 @@ int main(int argc, char *argv[])
 
     if(cl->has_para("gui"))
     {
-        QApplication a(argc, argv);
         MainWindow w;
         w.set_qa(&a);
         w.show();

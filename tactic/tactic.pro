@@ -16,8 +16,8 @@ unix {
     INSTALLS += target
 }
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../build-simu_dlls-Desktop_Qt_5_3_MSVC2013_32bit-Release/match_engine/release/ -lmatch_engine
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../build-simu_dlls-Desktop_Qt_5_3_MSVC2013_32bit-Release/match_engine/debug/ -lmatch_engine
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../build-test_simu_dlls_step-Desktop_Qt_5_3_MSVC2013_32bit-Release/match_engine/release/ -lmatch_engine
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../build-test_simu_dlls_step-Desktop_Qt_5_3_MSVC2013_32bit-Release/match_engine/debug/ -lmatch_engine
 
-INCLUDEPATH += $$PWD/../../build-simu_dlls-Desktop_Qt_5_3_MSVC2013_32bit-Release/match_engine/release
-DEPENDPATH += $$PWD/../../build-simu_dlls-Desktop_Qt_5_3_MSVC2013_32bit-Release/match_engine/release
+INCLUDEPATH += $$PWD/../../build-test_simu_dlls_step-Desktop_Qt_5_3_MSVC2013_32bit-Release/match_engine/release
+DEPENDPATH += $$PWD/../../build-test_simu_dlls_step-Desktop_Qt_5_3_MSVC2013_32bit-Release/match_engine/release
