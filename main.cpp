@@ -22,7 +22,8 @@
 
 int main(int argc, char *argv[])
 {
-    qDebug()<< QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss ddd");
+    QDateTime time_counter=QDateTime::currentDateTime();//.toString("yyyy-MM-dd hh:mm:ss ddd");
+    qDebug()<<time_counter.toString("yyyy-MM-dd hh:mm:ss ddd");
     QApplication a(argc, argv);
     cmd_line * cl=new cmd_line(argc,argv);
     logs * ls = new logs;
@@ -74,6 +75,8 @@ int main(int argc, char *argv[])
 
         df->setfile(cl->get_para("quote_file"));
         df->run();
+
+        qDebug()<<time_counter.msecsTo(QDateTime::currentDateTime())<<"ms";
         qDebug()<< QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss ddd");
         return a.exec();
     }
@@ -85,6 +88,8 @@ int main(int argc, char *argv[])
 
         df->setfile(cl->get_para("quote_file"));
         df->run();
+
+        qDebug()<<time_counter.msecsTo(QDateTime::currentDateTime())<<"ms";
         qDebug()<< QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss ddd");
         return 0;
     }
