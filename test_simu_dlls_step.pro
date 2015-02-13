@@ -9,8 +9,8 @@ QT       += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = simu_step
-#TEMPLATE = SUBDIRS
-TEMPLATE = app
+TEMPLATE = SUBDIRS
+#TEMPLATE = app
 
 
 SOURCES += main.cpp\
@@ -38,7 +38,9 @@ SUBDIRS += \
 	orderbook \
 	match_engine \
 	snapshot \
-	tactic
+	tactic \
+    pcp_tactic \
+    DG_tactic
 
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-test_simu_dlls_step-Desktop_Qt_5_3_MSVC2013_32bit-Release/datafeed/release/ -ldatafeed
