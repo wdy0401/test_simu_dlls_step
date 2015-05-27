@@ -1,6 +1,7 @@
 #include "match_engine.h"
 #include"../orderbook/orderbook.h"
 #include"../fillpolicy/fillpolicy.h"
+#include"../tactic/tactic.h"
 
 #include"../../gpp_qt/wfunction/wfunction.h"
 

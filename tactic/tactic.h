@@ -25,6 +25,9 @@
 #endif
 //############################################################
 
+const int PRICESTEP=5;
+const int LIMITSTEP=5;
+const int ORDERSZ=1;
 class ctp_order_manager;
 class TACTIC_EXPORT tactic: public QObject
 {
@@ -48,7 +51,14 @@ public slots:
     virtual void done(const std::string & ordername,const std::string & type,const std::string & info);
     virtual void rej(const std::string & ordername,const std::string & type,const std::string & info);
     virtual void fill(const std::string & ordername,const std::string & symbol,const std::string & buysell,double price, long size);
- private:
+    virtual void pause(){_pause=true;}
+    virtual void resume(){_pause=false;}
+private:
+    bool _pause;
+    int ordersize;
+    int ordersize_1;
+    double lasttradeprice;
+    double lasttradeprice_1;
     ctp_order_manager * om;
     wtimer * timer;
 };
