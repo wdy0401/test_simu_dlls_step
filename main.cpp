@@ -30,9 +30,14 @@ int main(int argc, char *argv[])
 
     QDateTime current_date_time = QDateTime::currentDateTime();
     QString current_date = current_date_time.toString("yyyy-MM-dd");
-    if(current_date<"2015-05-11" || current_date>"2015-12-31")
+    if(current_date>"2015-12-31")
     {
         QMessageBox::about(0,"本软件已过期","请联系兴证期货资管部续期");
+        return 0;
+    }
+    if(current_date<"2015-05-11")
+    {
+        QMessageBox::about(0,"日期错误","请联系兴证期货资管部");
         return 0;
     }
 
