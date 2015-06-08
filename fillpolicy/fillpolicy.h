@@ -11,7 +11,7 @@
 
 #include <QObject>
 #include <list>
-#include<map>
+#include <map>
 #include"order.h"
 #include"../orderbook/orderbook.h"
 #include"../../gpp_qt/wtimer/wtimer.h"
@@ -40,6 +40,8 @@ private:
     std::map <std::string,order *> _pend_order;
     std::map <std::string,order *> _run_order;
     std::map <std::string,order *> _done_order;
+    std::list<std::string> fpnames;
+    std::string fpname;
     wtimer * timer;
 };
 

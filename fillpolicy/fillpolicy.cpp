@@ -8,6 +8,8 @@ using namespace std;
 fillpolicy::fillpolicy(QObject *parent) :
     QObject(parent)
 {
+    fpnames.push_front("cross_fill");
+    fpnames.push_front("queue_fill");
 }
 void fillpolicy::init()
 {
