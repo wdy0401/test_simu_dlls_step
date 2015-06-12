@@ -22,6 +22,8 @@ struct order
 
     long size_to_fill;
     long size_filled;
+
+    long queue_position;
 };
 
 #endif // ORDER_H

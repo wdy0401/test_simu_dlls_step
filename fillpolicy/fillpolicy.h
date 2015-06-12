@@ -23,6 +23,7 @@ public:
     explicit fillpolicy(QObject *parent = 0);
     fillpolicy *genp(){return new fillpolicy;}
     void init();
+    void check_fill(const std::string & symbol,const std::string & fpn);
     void check_fill(const std::string & symbol);
     void set_timer(wtimer * p){timer=p;}
 
