@@ -10,7 +10,9 @@ SOURCES += fillpolicy.cpp \
     ../../gpp_qt/wfunction/qtfunction.cpp
 
 HEADERS += fillpolicy.h\
-    ../../gpp_qt/wfunction/qtfunction.h
+    ../../gpp_qt/wfunction/qtfunction.h \
+    order.h \
+    quote.h
 
 unix {
     target.path = /usr/lib

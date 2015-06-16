@@ -3,16 +3,19 @@
 #include<QPluginLoader>
 #include<QFileInfo>
 #include"../../gpp_qt/wfunction/qtfunction.h"
+
 using namespace std;
 
 fillpolicy::fillpolicy(QObject *parent) :
     QObject(parent)
 {
-    fpnames.push_front("cross_fill");
-    fpnames.push_front("queue_fill");
+    fpnames.insert("cross_fill");
+    fpnames.insert("queue_fill");
+    last_quote=new quote;
 }
 void fillpolicy::init()
 {
+    this->set_fpname("cross_fill");
 }
 void fillpolicy::rec_quote(const std::string & symbol,const std::string & bidask,long level,double price,long size)
 {
@@ -31,6 +34,7 @@ void fillpolicy::rec_quote(const std::string & symbol,const std::string & bidask
         ob[symbol]=tob;
         tob->updateorderbook(bidask,level,price,size);
     }
+    last_quote->update(symbol,bidask,level,price,size);
     check_fill(symbol);
 }
 
@@ -157,8 +161,62 @@ void fillpolicy::check_fill(const string & symbol,const string &fpn)
     }
     if(fpn=="queue_fill")
     {
-
+    //只有第一次需要orderbook信息
+    //其他时间只需要quote信息与fil信息
+    //quote信息决定了queue max位置
+    //fill信息决定了在order 是如何在queue中前进的
+    //也就是只在 pending时候看一看orderbook 之后就只看quote与fill
+        orderbook * now_ob=ob[symbol];
+         if(now_ob->init_done()==false)
+         {
+             return;
+         }
+        for(map<string,order *>::iterator iter=_run_order.begin(); iter!=_run_order.end();)
+        {
+            qDebug()<<"orderprice"                        <<"\t"<<iter->second->price                      <<"\t"<< iter->second->buysell.c_str()                          <<"\t"<<now_ob->getaskprice()                        <<"\t"<< now_ob->getbidprice()                        <<endl;
+            if(iter->second->price >= now_ob->getaskprice() && iter->second->buysell=="BUY")
+            {
+                emit fill(iter->first,symbol,"BUY",now_ob->getaskprice(),iter->second->size_to_fill);
+                _done_order[iter->first]=iter->second;
+                _run_order.erase(iter++);
+            }
+            else if(iter->second->price == now_ob->getbidprice() && iter->second->buysell=="BUY")
+            {
+                if(iter->second->queue_position > now_ob->getbidsize())
+                {
+                    iter->second->queue_position=now_ob->getbidsize();
+                }
+                iter++;
+            }
+            else if(iter->second->price <= now_ob->getbidprice() &&iter->second->buysell=="SELL")
+            {
+                emit fill(iter->first,symbol,"SELL",now_ob->getbidprice(),iter->second->size_to_fill);
+                _done_order[iter->first]=iter->second;
+                _run_order.erase(iter++);
+            }
+            else if(iter->second->price == now_ob->getaskprice() && iter->second->buysell=="SELL")
+            {
+                if(iter->second->queue_position > now_ob->getasksize())
+                {
+                    iter->second->queue_position=now_ob->getasksize();
+                }
+                iter++;
+            }
+            else
+            {
+                ++iter;
+            }
+        }
+        for(map<string,order *>::iterator iter=_pend_order.begin();iter!=_pend_order.end();iter++)
+        {
+            if((last_quote->_bidask=="BID" && iter->second->buysell=="BUY")||(last_quote->_bidask=="ASK" && iter->second->buysell=="SELL"))
+            {
+                iter->second->queue_position= last_quote->_size;
+                _run_order[iter->first]=iter->second;
+                _pend_order.erase(iter++);
+            }
+            iter++;
+        }
     }
-
 }
 

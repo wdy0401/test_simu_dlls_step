@@ -10,9 +10,10 @@
 #include <QtCore/qglobal.h>
 
 #include <QObject>
-#include <list>
+#include <set>
 #include <map>
 #include"order.h"
+#include"quote.h"
 #include"../orderbook/orderbook.h"
 #include"../../gpp_qt/wtimer/wtimer.h"
 
@@ -26,6 +27,7 @@ public:
     void check_fill(const std::string & symbol,const std::string & fpn);
     void check_fill(const std::string & symbol);
     void set_timer(wtimer * p){timer=p;}
+    bool set_fpname(const std::string & fpn){fpname=fpn;return fpnames.find(fpn)!=fpnames.end();}
 
 signals:
     void ack(const std::string & ordername,const std::string & type,const std::string & info);
@@ -41,9 +43,10 @@ private:
     std::map <std::string,order *> _pend_order;
     std::map <std::string,order *> _run_order;
     std::map <std::string,order *> _done_order;
-    std::list<std::string> fpnames;
+    std::set<std::string> fpnames;
     std::string fpname;
     wtimer * timer;
+    quote * last_quote;
 };
 
 #endif // FILLPOLICY_H
