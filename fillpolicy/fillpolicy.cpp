@@ -38,6 +38,10 @@ void fillpolicy::rec_quote(const std::string & symbol,const std::string & bidask
     check_fill(symbol);
 }
 
+void rec_fill(const std::string & symbol,double price,long size)
+{
+    qDebug()<<"rec_fill function not finished";
+}
 void fillpolicy::rec_new_order(const std::string ordername,const std::string symbol,const std::string buysell, const std::string & openclose ,double price,long size)
 {
     qDebug()<<"fillpolicy rec_new_order\n";
@@ -79,7 +83,11 @@ void fillpolicy::check_fill(const string & symbol,const string &fpn)
         for(map<string,order *>::iterator iter=_run_order.begin(); iter!=_run_order.end();)
         {
             qDebug()<<"orderprice"                        <<"\t"<<iter->second->price                      <<"\t"<< iter->second->buysell.c_str()                          <<"\t"<<now_ob->getaskprice()                        <<"\t"<< now_ob->getbidprice()                        <<endl;
-            if(iter->second->price>=now_ob->getaskprice() && iter->second->buysell=="BUY")
+            if(iter->second->symbol != symbol)
+            {
+                ++iter;
+            }
+            else if(iter->second->price>=now_ob->getaskprice() && iter->second->buysell=="BUY")
             {
                 emit fill(iter->first,symbol,"BUY",now_ob->getaskprice(),iter->second->size_to_fill);
                 _done_order[iter->first]=iter->second;
@@ -174,7 +182,11 @@ void fillpolicy::check_fill(const string & symbol,const string &fpn)
         for(map<string,order *>::iterator iter=_run_order.begin(); iter!=_run_order.end();)
         {
             qDebug()<<"orderprice"                        <<"\t"<<iter->second->price                      <<"\t"<< iter->second->buysell.c_str()                          <<"\t"<<now_ob->getaskprice()                        <<"\t"<< now_ob->getbidprice()                        <<endl;
-            if(iter->second->price >= now_ob->getaskprice() && iter->second->buysell=="BUY")
+            if(iter->second->symbol != symbol)
+            {
+                ++iter;
+            }
+            else if(iter->second->price >= now_ob->getaskprice() && iter->second->buysell=="BUY")
             {
                 emit fill(iter->first,symbol,"BUY",now_ob->getaskprice(),iter->second->size_to_fill);
                 _done_order[iter->first]=iter->second;
