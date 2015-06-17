@@ -11,11 +11,11 @@ fillpolicy::fillpolicy(QObject *parent) :
 {
     fpnames.insert("cross_fill");
     fpnames.insert("queue_fill");
+    this->set_fpname("cross_fill");
     last_quote=new quote;
 }
 void fillpolicy::init()
 {
-    this->set_fpname("cross_fill");
 }
 void fillpolicy::rec_quote(const std::string & symbol,const std::string & bidask,long level,double price,long size)
 {
