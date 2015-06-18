@@ -38,7 +38,8 @@ SUBDIRS += \
 	orderbook \
 	match_engine \
 	snapshot \
-	tactic
+	tactic \
+    optionf
 
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-test_simu_dlls_step-Desktop_Qt_5_3_MSVC2013_32bit-Release/datafeed/release/ -ldatafeed
