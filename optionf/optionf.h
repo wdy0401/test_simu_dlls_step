@@ -5,6 +5,7 @@
 
 #include <math.h>
 #include <map>
+#include <list>
 
 class OPTIONFSHARED_EXPORT optionf
 {
@@ -15,7 +16,8 @@ public:
     double get_vol();
 
 private:
-    std::map<long,double> vol_list;
+    std::list <double> vol_list;
+    std::map<long,double> vol_map;
 };
 
 #endif // OPTIONF_H
