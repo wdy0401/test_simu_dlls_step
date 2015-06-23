@@ -35,12 +35,14 @@ void fillpolicy::rec_quote(const std::string & symbol,const std::string & bidask
         tob->updateorderbook(bidask,level,price,size);
     }
     last_quote->update(symbol,bidask,level,price,size);
-    check_fill(symbol);
+    check_fill_on_quote(symbol);
 }
 
-void rec_fill(const std::string & symbol,double price,long size)
+void fillpolicy::rec_fill(const std::string & symbol,double price,long size)
 {
-    qDebug()<<"rec_fill function not finished";
+    //    qDebug()<<"rec_fill function not finished"<< QString::fromStdString(symbol) << price << size;
+    last_fill->init(symbol,price,size);
+    check_fill_on_fill(symbol);
 }
 void fillpolicy::rec_new_order(const std::string ordername,const std::string symbol,const std::string buysell, const std::string & openclose ,double price,long size)
 {
@@ -58,12 +60,62 @@ void fillpolicy::rec_new_order(const std::string ordername,const std::string sym
     _pend_order[ordername]=tmporder;
 }
 
-void fillpolicy::check_fill(const string & symbol)
+void fillpolicy::check_fill_on_fill(const string & symbol)
 {
-    check_fill(symbol,this->fpname);
+    check_fill_on_fill(symbol,this->fpname);
 }
 
-void fillpolicy::check_fill(const string & symbol,const string &fpn)
+void fillpolicy::check_fill_on_fill(const string & symbol,const string &fpn)
+{
+    if(fpn=="queue_fill")
+    {
+        for(map<string,order *>::iterator iter=_run_order.begin(); iter!=_run_order.end();)
+        {
+            if(iter->second->symbol != symbol)
+            {
+                ++iter;
+            }
+            else if(iter->second->price == last_fill->_price)
+            {
+               if(iter->second->queue_position>=last_fill->_size)
+               {
+                   iter->second->queue_position -= last_fill->_size;
+                   iter++;
+               }
+               else if(iter->second->size_to_fill < (last_fill->_size - iter->second->queue_position))
+               {
+                   iter->second->size_filled+=(last_fill->_size - iter->second->queue_position);
+                   iter->second->size_to_fill=iter->second->size - iter->second->size_filled;
+                   emit fill(iter->first,symbol,iter->second->buysell,last_fill->_price,last_fill->_size - iter->second->queue_position);
+                   iter->second->queue_position = 0;
+                   iter++;
+               }
+               else
+               {
+                    emit fill(iter->first,symbol,iter->second->buysell,last_fill->_price,iter->second->size_to_fill);
+                    _done_order[iter->first]=iter->second;
+                    _run_order.erase(iter++);
+               }
+            }
+            else if((iter->second->price > last_fill->_price && iter->second->buysell=="BUY") || (iter->second->price < last_fill->_price && iter->second->buysell=="SELL"))
+            {
+                emit fill(iter->first,symbol,iter->second->buysell,iter->second->price,iter->second->size_to_fill);
+                _done_order[iter->first]=iter->second;
+                _run_order.erase(iter++);
+            }
+            else
+            {
+                ++iter;
+            }
+        }
+    }
+}
+void fillpolicy::check_fill_on_quote(const string & symbol)
+{
+    check_fill_on_quote(symbol,this->fpname);
+}
+
+void fillpolicy::check_fill_on_quote(const string & symbol,const string &fpn)
 {
     if(fpn=="cross_fill")
     {
@@ -194,6 +246,9 @@ void fillpolicy::check_fill(const string & symbol,const string &fpn)
 //	在level n 不成交，会利用此价位此价位ob中的size 为order的max queue size
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//虽然可以只看quote 但为同一处理逻辑起见 仍旧写成看ob的形式
+/////////////////////////////////////////////////////////////////////////////////////////////////
         orderbook * now_ob=ob[symbol];
          if(now_ob->init_done()==false)
          {
@@ -239,7 +294,7 @@ void fillpolicy::check_fill(const string & symbol,const string &fpn)
                 ++iter;
             }
         }
-        for(map<string,order *>::iterator iter=_pend_order.begin();iter!=_pend_order.end();iter++)
+        for(map<string,order *>::iterator iter=_pend_order.begin();iter!=_pend_order.end();)
         {
             if((last_quote->_bidask=="BID" && iter->second->buysell=="BUY")||(last_quote->_bidask=="ASK" && iter->second->buysell=="SELL"))
             {

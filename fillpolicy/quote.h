@@ -20,4 +20,17 @@ struct quote
     }
 };
 
+struct fill_record
+{
+    std::string _symbol;
+    double _price;
+    long _size;
+    void init(const std::string & symbol,double price,long size)
+    {
+        _symbol=symbol;
+        _price=price;
+        _size=size;
+    }
+};
+
 #endif // ORDER_H

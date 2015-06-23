@@ -24,8 +24,10 @@ public:
     explicit fillpolicy(QObject *parent = 0);
     fillpolicy *genp(){return new fillpolicy;}
     void init();
-    void check_fill(const std::string & symbol,const std::string & fpn);
-    void check_fill(const std::string & symbol);
+    void check_fill_on_quote(const std::string & symbol,const std::string & fpn);
+    void check_fill_on_quote(const std::string & symbol);
+    void check_fill_on_fill(const std::string & symbol,const std::string & fpn);
+    void check_fill_on_fill(const std::string & symbol);
     void set_timer(wtimer * p){timer=p;}
     bool set_fpname(const std::string & fpn){fpname=fpn;return fpnames.find(fpn)!=fpnames.end();}
 
@@ -48,6 +50,7 @@ private:
     std::string fpname;
     wtimer * timer;
     quote * last_quote;
+    fill_record * last_fill;
 };
 
 #endif // FILLPOLICY_H
