@@ -14,6 +14,8 @@ public:
     optionf();
     void set_vol(long second,double price);
     double get_vol();
+    double get_vol_adjust();
+
 
 private:
     std::list <double> vol_list;
