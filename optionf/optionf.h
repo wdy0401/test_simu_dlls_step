@@ -21,5 +21,6 @@ private:
     std::list <double> vol_list;
     std::map<long,double> vol_map;
 };
+//
 
 #endif // OPTIONF_H
