@@ -12,6 +12,17 @@ void optionf::set_vol(long second,double price)
 {
     vol_map[second]=price;
     vol_list.push_front(price);
+
+
+    map <long,map<long,double>*>::iterator iter=vol_snap_map.begin();
+    while(iter!=vol_snap_map.end())
+    {
+        if((*(iter->second)).find(second/iter->first)==(*(iter->second)).end())
+        {
+            (*iter->second)[second/iter->first]=price;
+            vol_snap_list.find(iter->first)->second->push_front(price);
+        }
+    }
 }
 double optionf::get_vol()
 {   
@@ -46,5 +57,33 @@ double optionf::get_vol_adjust()
         it2++;
     }
     return sqrt((sum_vol-sum_ave*sum_ave/(time_length+1))/time_length);
+}
+double optionf::get_vol(long seconds)
+{
+    map <long,map<long,double>*>::iterator iter=vol_snap_map.find(seconds);
+    if(iter!=vol_snap_map.end())
+    {
+        return wmath::stdev(vol_snap_list.find(seconds)->second);
+    }
+    else
+    {
+        map<long,double> * new_map=new map<long,double>;
+        list<double> * new_list=new list<double>;
+        vol_snap_map[seconds]=new_map;
+        vol_snap_list[seconds]=new_list;
+        map<long,double>::iterator it=vol_map.begin();
+        while(it!=vol_map.end())
+        {
+            long sec=it->first;
+            double value=it->second;
+            if(new_map->find(sec/seconds)==new_map->end())
+            {
+                (*new_map)[sec/seconds]=value;
+                new_list->push_back(value);
+            }
+            it++;
+        }
+    }
+    return wmath::stdev(vol_snap_list.find(seconds)->second);
 }
 
