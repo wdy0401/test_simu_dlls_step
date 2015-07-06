@@ -8,7 +8,6 @@ optionf::optionf()
 {
     inited=false;
 }
-
 void optionf::set_vol(long second,double price)
 {
     if(inited==false)
@@ -19,7 +18,6 @@ void optionf::set_vol(long second,double price)
     }
     vol_map[second]=log(price)-log(lastp);
     vol_list.push_front(log(price)-log(lastp));
-
 
     map <long,map<long,double>*>::iterator iter=vol_snap_map.begin();
     while(iter!=vol_snap_map.end())
