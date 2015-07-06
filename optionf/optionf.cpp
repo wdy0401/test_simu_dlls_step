@@ -24,7 +24,7 @@ void optionf::set_vol(long second,double price)
     map <long,map<long,double>*>::iterator iter=vol_snap_map.begin();
     while(iter!=vol_snap_map.end())
     {
-        if((*(iter->second)).rbegin()->first/iter->first==second/iter->first)
+        if((*(iter->second)).rbegin()->first/iter->first!=second/iter->first)
         {
             (*iter->second)[second]=price;
         }
