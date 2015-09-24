@@ -1,0 +1,1 @@
+qmessagebox 只能在主线程使用
