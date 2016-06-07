@@ -9,8 +9,8 @@ QT       += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = simu_step
-TEMPLATE = SUBDIRS
-#TEMPLATE = app
+#TEMPLATE = SUBDIRS
+TEMPLATE = app
 
 
 SOURCES += main.cpp\
